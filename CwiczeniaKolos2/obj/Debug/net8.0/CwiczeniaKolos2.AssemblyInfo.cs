@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CwiczeniaKolos2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0dd30931889240f3762cde816ee530208f012b07")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7531ea8ddce864fcce7a31bf030e91a543edc406")]
 [assembly: System.Reflection.AssemblyProductAttribute("CwiczeniaKolos2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CwiczeniaKolos2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
