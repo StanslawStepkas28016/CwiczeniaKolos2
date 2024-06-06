@@ -55,58 +55,65 @@ public class MuzykaRepository : IMuzykaRepository
     {
         await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 
-        if (IsProvidedUtworValid(muzykWithUtworDto.UtworWithoutKeyDto) == false)
+        try
         {
-            return -1;
-        }
-
-        var utwor = new Utwor
-        {
-            NazwaUtworu = muzykWithUtworDto.UtworWithoutKeyDto.NazwaUtworu!,
-            CzasTrwania = muzykWithUtworDto.UtworWithoutKeyDto.CzasTrwania
-        };
-
-        if (await DoesUtworExist(muzykWithUtworDto.UtworWithoutKeyDto, cancellationToken) == false)
-        {
-            await _context
-                .Utwory
-                .AddAsync(utwor, cancellationToken);
-
-            await _context.SaveChangesAsync(cancellationToken);
-        }
-        else
-        {
-            utwor = await _context
-                .Utwory
-                .Where(u => u.NazwaUtworu == muzykWithUtworDto.UtworWithoutKeyDto.NazwaUtworu)
-                .FirstOrDefaultAsync(cancellationToken);
-
-            await _context.SaveChangesAsync(cancellationToken);
-        }
-
-        var muzyk = new Muzyk
-        {
-            Imie = muzykWithUtworDto.Imie,
-            Nazwisko = muzykWithUtworDto.Nazwisko,
-            Pseudonim = muzykWithUtworDto.Pseudonim
-        };
-
-        await _context
-            .Muzycy
-            .AddAsync(muzyk, cancellationToken);
-
-        await _context.SaveChangesAsync(cancellationToken);
-
-        await _context
-            .WykonawcyUtworow
-            .AddAsync(new WykonawcaUtworu
+            if (IsProvidedUtworValid(muzykWithUtworDto.UtworWithoutKeyDto) == false)
             {
-                IdMuzyk = muzyk.IdMuzyk,
-                IdUtwor = utwor.IdUtwor
-            }, cancellationToken);
+                return -1;
+            }
 
-        await _context.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
+            var utwor = new Utwor
+            {
+                NazwaUtworu = muzykWithUtworDto.UtworWithoutKeyDto.NazwaUtworu!,
+                CzasTrwania = muzykWithUtworDto.UtworWithoutKeyDto.CzasTrwania
+            };
+
+            if (await DoesUtworExist(muzykWithUtworDto.UtworWithoutKeyDto, cancellationToken) == false)
+            {
+                await _context
+                    .Utwory
+                    .AddAsync(utwor, cancellationToken);
+
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+            else
+            {
+                utwor = await _context
+                    .Utwory
+                    .Where(u => u.NazwaUtworu == muzykWithUtworDto.UtworWithoutKeyDto.NazwaUtworu)
+                    .FirstOrDefaultAsync(cancellationToken);
+
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+
+            var muzyk = new Muzyk
+            {
+                Imie = muzykWithUtworDto.Imie,
+                Nazwisko = muzykWithUtworDto.Nazwisko,
+                Pseudonim = muzykWithUtworDto.Pseudonim
+            };
+
+            await _context
+                .Muzycy
+                .AddAsync(muzyk, cancellationToken);
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            await _context
+                .WykonawcyUtworow
+                .AddAsync(new WykonawcaUtworu
+                {
+                    IdMuzyk = muzyk.IdMuzyk,
+                    IdUtwor = utwor.IdUtwor
+                }, cancellationToken);
+
+            await _context.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync(cancellationToken);
+        }
 
         return 1;
     }
