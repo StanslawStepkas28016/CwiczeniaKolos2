@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../build/CwiczeniaKolos2.props" />
+</Project>

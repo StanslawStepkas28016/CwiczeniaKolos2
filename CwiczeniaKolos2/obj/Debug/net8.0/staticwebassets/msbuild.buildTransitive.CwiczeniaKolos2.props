@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../buildMultiTargeting/CwiczeniaKolos2.props" />
+</Project>
